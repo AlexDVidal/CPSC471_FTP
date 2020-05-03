@@ -62,3 +62,9 @@ def attachHeader(buff, headSize):
 	# file data.
 	headBuff = dataSizeStr + buff	
 	return headBuff
+
+#########################################################
+# 
+#
+#
+#########################################################

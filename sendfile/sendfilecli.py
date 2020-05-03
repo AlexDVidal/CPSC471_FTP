@@ -31,7 +31,8 @@ comSock.connect((serverAddr, serverPort))
 
 # The number of bytes sent
 while True:
-	userInput = input("ftp>")#.split(" ")
+	userInput = input("ftp>")
+	tokens = userInput.split(" ")
 	numSent = 0
 
 	#if(userInput[0] == "set"):
@@ -80,67 +81,71 @@ while True:
 		
 	#elif(userInput[0] == "get"):
 	#elif(userInput[0] == "ls"):
-	#elif(userInput[0] == "quit"):
-	#else
-		#unknown input
-
-
-	command = userInput
-	
-	command = ftp_helper.attachHeader(command, headerSize)
-
-	# The number of bytes sent
-	numSent = 0
-	
-
-	# Send the data!
-	while len(command) > numSent:
-		numSent += comSock.send(command[numSent:].encode())
-		print("sent", numSent, "bytes")
-
-
-	print("Sent ", numSent, " bytes in total.")
-
-	# The buffer to all data received from the
-	# the server.
-	response = ""
-	
-	# The temporary buffer to store the received
-	# data.
-	recvBuff = ""
-	
-	# The size of the incoming file
-	responseSize = 0	
-	
-	# The buffer containing the file size
-	responseSizeBuff = ""
-	
-	# Receive the first 10 bytes indicating the
-	# size of the file
-	responseSizeBuff = ftp_helper.recvAll(comSock, headerSize)
-	if not responseSizeBuff:
-		print("Server disconnected.\n")
-		break
+	if(tokens[0] == "quit"):
+		command = userInput
 		
-	# Get the file size
-	responseSize = int(responseSizeBuff)
-	
-	
-	# Get the file data
-	responseData = ftp_helper.recvAll(comSock, responseSize)
-	if not responseData:
-		print("Server disconnected.\n")
-		break		
+		command = ftp_helper.attachHeader(command, headerSize)
 
-	#we have a response, time to parse it
-	print(responseData)
-	
-	responseData = responseData.split()
+		# The number of bytes sent
+		numSent = 0
 		
+
+		# Send the data!
+		while len(command) > numSent:
+			numSent += comSock.send(command[numSent:].encode())
+			print("sent", numSent, "bytes")
+
+
+		print("Sent ", numSent, " bytes in total.")
+
+		# The buffer to all data received from the
+		# the server.
+		response = ""
+		
+		# The temporary buffer to store the received
+		# data.
+		recvBuff = ""
+		
+		# The size of the incoming file
+		responseSize = 0	
+		
+		# The buffer containing the file size
+		responseSizeBuff = ""
+		
+		# Receive the first 10 bytes indicating the
+		# size of the file
+		responseSizeBuff = ftp_helper.recvAll(comSock, headerSize)
+		if not responseSizeBuff:
+			print("Server disconnected.\n")
+			break
+			
+		# Get the file size
+		responseSize = int(responseSizeBuff)
+		
+		
+		# Get the file data
+		responseData = ftp_helper.recvAll(comSock, responseSize)
+		if not responseData:
+			print("Server disconnected.\n")
+			break		
+
+		#we have a response, time to parse it
+		print(responseData)
+		
+		responseData = responseData.split()
+
+		print("Quitting out")	
+		comSock.close()
+		exit()
+
+	else:
+		print("Unknown command.")
+		continue
+
+
 		
 	
 # Close the socket and the file
-comSock.close()
 # fileObj.close()
 	
 
