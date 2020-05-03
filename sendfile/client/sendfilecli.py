@@ -105,10 +105,12 @@ while True:
 		# //////////////////////////////////////
 		# 2nd Socket
 		print("Set command. Sending message")
+		f = open(tokens[1], "r")
 		serverPort2 = 12000
 		dataSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		dataSocket.connect((serverAddr, serverPort2))
-		message2 = "Testing second socket"
+		message2 = f.read()
+		f.close()
 		ftp_helper.sendData(dataSocket,message2,headerSize)
 
 	elif(tokens[0] == "get"):

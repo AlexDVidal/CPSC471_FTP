@@ -81,6 +81,9 @@ while True:
 			if not fileData:
 				print("Client disconnected data socket.")
 			print(fileData)
+			f = open(tokens[1], "w")
+			f.write(fileData)
+			f.close()
 			clientSock2.close()
 			dataSocket.close()
 		

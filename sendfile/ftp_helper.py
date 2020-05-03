@@ -35,6 +35,7 @@ def recvAll(sock, numBytes):
 		recvBuff += tmpBuff
 	
 	return recvBuff
+	
 
 ########################################################
 # Calculates the size of a buffer and attaches
@@ -115,3 +116,4 @@ def recvData(sock, headSize):
 		return ""
 
 	return data
+
