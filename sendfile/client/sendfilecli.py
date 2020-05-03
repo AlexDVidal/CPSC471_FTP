@@ -57,8 +57,16 @@ while True:
 	elif(tokens[0] == "set"):
 		# //////////////////////////////////////
 		# 2nd Socket
+
+		if (len(tokens) != 2):
+			print("set FAILURE. Malformed request.", tokens)
+			continue
 		print("Set command. Sending message")
-		f = open(tokens[1], "r")
+		try:
+			f = open(tokens[1], "r")
+		except Exception as exc:
+			print("File ", tokens[1], "not found")
+			continue
 		serverPort2 = 12000
 		dataSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		dataSocket.connect((serverAddr, serverPort2))
