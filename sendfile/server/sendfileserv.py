@@ -81,6 +81,43 @@ while True:
 			if not fileData:
 				print("Client disconnected data socket.")
 			print(fileData)
+			clientSock2.close()
+			dataSocket.close()
+		
+		elif tokens[0] == "get":
+			print("get received")
+			
+			if(len(tokens) != 2):
+				print("get FAILURE. Malformed request.", tokens)
+				ftp_helper.sendData(clientSock, "error malformed request", headerSize)
+				continue
+			try:
+				dataFile = open(tokens[1], "r")
+				data = dataFile.read(65536)
+			except Exception as exc:
+				print("get FAILURE.", exc)
+				ftp_helper.sendData(
+					clientSock, "error in subprocess for get", headerSize)
+				continue
+
+			#we have the result of the call to get, make an ephemeral port
+			#tell the client the details and send the data
+			listenSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+			listenSocket.bind(('', 0))
+			listenSocket.listen(1)
+			dataPort = listenSocket.getsockname()[1]
+			#tell the client what port to connect to
+			response = "get ok port " +str(dataPort)
+			ftp_helper.sendData(clientSock, response, headerSize)
+			
+			#block until connection received then send data
+			dataSocket, addr = listenSocket.accept()
+			print("accepted data connection")
+			ftp_helper.sendData(dataSocket, data, headerSize)
+			#close the ephemeral sockets
+			dataSocket.close()
+			listenSocket.close()
+			print("get SUCCESS\n")
 
 		elif tokens[0] == "ls":
 			print("ls received")
@@ -113,7 +150,6 @@ while True:
 			listenSocket.close()
 			print("ls SUCCESS\n")
 			
-
 		#Handle malformed command		
 		else:
 			response = "error"
