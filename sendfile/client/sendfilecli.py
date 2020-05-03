@@ -86,10 +86,11 @@ while True:
 		
 	#elif(userInput[0] == "get"):
 	#elif(userInput[0] == "ls"):
+
+	commandData = userInput	
+	ftp_helper.sendData(comSock, commandData, headerSize)
 	if(tokens[0] == "quit"):
-		commandData = userInput
 		
-		ftp_helper.sendData(comSock, commandData, headerSize)
 
 		response = ftp_helper.recvData(comSock, headerSize)
 

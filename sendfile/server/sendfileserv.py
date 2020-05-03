@@ -63,7 +63,7 @@ while True:
 
 			# Close socket now that quit has been received
 			clientSock.close()
-			print("Quit SUCCESSFUL. Closed socket to client.\n");
+			print("Quit SUCCESSFUL. Closed socket to client.\n")
 			break
 
 
@@ -74,7 +74,7 @@ while True:
 			dataSocket.bind(('', 12000))
 			dataSocket.listen(1)
 			print("Waiting for second socket connections...")
-			clientSock2, addr2 = socket2.accept()
+			clientSock2, addr2 = dataSocket.accept()
 			print("Accepted second connection from client: ", addr2)
 			print("\n")
 			fileData = ftp_helper.recvData(clientSock2,headerSize)
@@ -118,6 +118,6 @@ while True:
 		else:
 			response = "error"
 			ftp_helper.sendData(clientSock, response, headerSize)
-			print("ERROR. Malformed command from client:");
+			print("ERROR. Malformed command from client:")
 			print(commandData)
 
