@@ -70,6 +70,9 @@ while True:
 		# ////////////////////////////
 		# Second socket
 		elif tokens[0] == "set":
+			if (len(tokens) != 2):
+				print("set FAILURE. Malformed request.", tokens)
+				continue
 			dataSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 			dataSocket.bind(('', 12000))
 			dataSocket.listen(1)
@@ -80,10 +83,11 @@ while True:
 			fileData = ftp_helper.recvData(clientSock2,headerSize)
 			if not fileData:
 				print("Client disconnected data socket.")
-			print(fileData)
 			f = open(tokens[1], "w")
 			f.write(fileData)
 			f.close()
+			print(fileData)
+			print("Data written to file: ", tokens[1])
 			clientSock2.close()
 			dataSocket.close()
 		
