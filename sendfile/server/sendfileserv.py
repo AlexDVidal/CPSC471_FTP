@@ -6,6 +6,10 @@
 # *****************************************************
 import sys
 import socket
+
+#add the directory above this script to the system path to import the
+#helper functions
+sys.path.insert(1,"../")
 import ftp_helper
 
 # Command line checks 

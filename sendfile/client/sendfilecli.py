@@ -8,7 +8,12 @@
 import socket
 import os
 import sys
+
+#add the directory above this script to the system path to import the
+#helper functions
+sys.path.insert(1,"../")
 import ftp_helper
+
 
 # Command line checks 
 if len(sys.argv) < 2:
@@ -90,7 +95,6 @@ while True:
 
 		if not response:
 			print("Server disconnected unexpectedly.")
-		print(response)
 		
 		print("Quitting out.")	
 		comSock.close()
