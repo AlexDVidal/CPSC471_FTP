@@ -108,6 +108,26 @@ while True:
 		dataSocket.connect((serverAddr, serverPort2))
 		message2 = "Testing second socket"
 		ftp_helper.sendData(dataSocket,message2,headerSize)
+	elif(tokens[0] == "ls"):
+		commandData = userInput
+
+		ftp_helper.sendData(comSock, commandData, headerSize)
+		response = ftp_helper.recvData(comSock, headerSize).split(" ")
+		if len(response) == 0:
+			print("Server disconnected unexpectedly.")
+			break
+		elif(response[0] != "ls" or len(response) < 4):
+			print(" ".join(response))
+			continue
+		#expect a response of the form "ls ok port <num>
+		dataPort = int(response[3])
+		
+		#confirmation received, connect data socket and get data
+		dataSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		dataSocket.connect((serverAddr, dataPort))
+		data = ftp_helper.recvData(dataSocket, headerSize)
+		print(data)
+		
 	else:
 		print("Unknown command.")
 		continue
