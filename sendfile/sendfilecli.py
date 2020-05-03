@@ -8,12 +8,15 @@
 import socket
 import os
 import sys
+import ftp_helper
 
 # Command line checks 
 if len(sys.argv) < 2:
 	print("USAGE python " + sys.argv[0] + " <FILE NAME>")
 	exit()
-        
+    
+headerSize = 10
+    
 # Server address
 serverAddr = "localhost"
 
@@ -82,38 +85,21 @@ while True:
 		#unknown input
 
 
-	fileData = userInput
-	print("Command is ", fileData)
-		
-	# Get the size of the data read
-	# and convert it to string
-	dataSizeStr = str(len(fileData))
-	print("Size of command is", dataSizeStr)
-
-	# Prepend 0's to the size string
-	# until the size is 10 bytes
-	while len(dataSizeStr) < 10:
-		dataSizeStr = "0" + dataSizeStr
-	print("final size string is", dataSizeStr)
-
-
-	# Prepend the size of the data to the
-	# file data.
-	fileData = dataSizeStr + fileData	
-	print("data to send", fileData)	
+	command = userInput
+	
+	command = ftp_helper.attachHeader(command, headerSize)
 
 	# The number of bytes sent
 	numSent = 0
 	
 
 	# Send the data!
-	while len(fileData) > numSent:
-		numSent += comSock.send(fileData[numSent:].encode())
+	while len(command) > numSent:
+		numSent += comSock.send(command[numSent:].encode())
 		print("sent", numSent, "bytes")
 
 
-
-	print("Sent ", numSent, " bytes.")
+	print("Sent ", numSent, " bytes in total.")
 	
 # Close the socket and the file
 comSock.close()

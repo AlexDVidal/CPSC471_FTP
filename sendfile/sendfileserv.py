@@ -6,11 +6,14 @@
 # *****************************************************
 import sys
 import socket
+import ftp_helper
 
 # Command line checks 
 if len(sys.argv) < 2:
 	print("USAGE python " + sys.argv[0] + " <FILE NAME>")
 	exit()
+
+headerSize = 10
 
 # The port on which to listen
 listenPort = int(sys.argv[1])
@@ -23,36 +26,6 @@ welcomeSock.bind(('', listenPort))
 
 # Start listening on the socket
 welcomeSock.listen(1)
-
-# ************************************************
-# Receives the specified number of bytes
-# from the specified socket
-# @param sock - the socket from which to receive
-# @param numBytes - the number of bytes to receive
-# @return - the bytes received
-# *************************************************
-def recvAll(sock, numBytes):
-
-	# The buffer
-	recvBuff = ""
-	
-	# The temporary buffer
-	tmpBuff = ""
-	
-	# Keep receiving till all is received
-	while len(recvBuff) < numBytes:
-		
-		# Attempt to receive bytes
-		tmpBuff =  sock.recv(numBytes).decode()
-		
-		# The other side has closed the socket
-		if not tmpBuff:
-			break
-		
-		# Add the received bytes to the buffer
-		recvBuff += tmpBuff
-	
-	return recvBuff
 		
 # Accept connections forever
 while True:
@@ -83,23 +56,26 @@ while True:
 		
 		# Receive the first 10 bytes indicating the
 		# size of the file
-		commandSizeBuff = recvAll(clientSock, 10)
+		commandSizeBuff = ftp_helper.recvAll(clientSock, 10)
 		if not commandSizeBuff:
+			print("Client disconnected.\n")
 			break
 			
-		print("Size of buffer is ", commandSizeBuff)
 		# Get the file size
 		commandSize = int(commandSizeBuff)
 		
-		print("The command size is ", commandSize)
 		
 		# Get the file data
-		commandData = recvAll(clientSock, commandSize)
+		commandData = ftp_helper.recvAll(clientSock, commandSize)
 		if not commandData:
+			print("Client disconnected.\n")
 			break		
 
-		print("The command is: ")
+		#we have a command, time to parse it
 		print(commandData)
+		
+		commandData = commandData.split()
+		
 			
 		# Close our side if quit is received
 		#clientSock.close()
