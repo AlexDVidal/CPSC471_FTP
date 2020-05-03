@@ -82,59 +82,17 @@ while True:
 	#elif(userInput[0] == "get"):
 	#elif(userInput[0] == "ls"):
 	if(tokens[0] == "quit"):
-		command = userInput
+		commandData = userInput
 		
-		command = ftp_helper.attachHeader(command, headerSize)
+		ftp_helper.sendData(comSock, commandData, headerSize)
 
-		# The number of bytes sent
-		numSent = 0
-		
+		response = ftp_helper.recvData(comSock, headerSize)
 
-		# Send the data!
-		while len(command) > numSent:
-			numSent += comSock.send(command[numSent:].encode())
-			print("sent", numSent, "bytes")
-
-
-		print("Sent ", numSent, " bytes in total.")
-
-		# The buffer to all data received from the
-		# the server.
-		response = ""
+		if not response:
+			print("Server disconnected unexpectedly.")
+		print(response)
 		
-		# The temporary buffer to store the received
-		# data.
-		recvBuff = ""
-		
-		# The size of the incoming file
-		responseSize = 0	
-		
-		# The buffer containing the file size
-		responseSizeBuff = ""
-		
-		# Receive the first 10 bytes indicating the
-		# size of the file
-		responseSizeBuff = ftp_helper.recvAll(comSock, headerSize)
-		if not responseSizeBuff:
-			print("Server disconnected.\n")
-			break
-			
-		# Get the file size
-		responseSize = int(responseSizeBuff)
-		
-		
-		# Get the file data
-		responseData = ftp_helper.recvAll(comSock, responseSize)
-		if not responseData:
-			print("Server disconnected.\n")
-			break		
-
-		#we have a response, time to parse it
-		print(responseData)
-		
-		responseData = responseData.split()
-
-		print("Quitting out")	
+		print("Quitting out.")	
 		comSock.close()
 		exit()
 

@@ -64,7 +64,54 @@ def attachHeader(buff, headSize):
 	return headBuff
 
 #########################################################
-# 
-#
-#
+# Sends data on the provided socket with the correct header
+# @param socket - the socket to send data on
+# @param data - the data to send on the socket
+# @param headSize - the size of the header needed for
+#		this package
 #########################################################
+def sendData(sock, data, headSize):
+	data = attachHeader(data, headSize)
+
+	# The number of bytes sent
+	numSent = 0
+
+	# Send the data!
+	while len(data) > numSent:
+		numSent += sock.send(data[numSent:].encode())
+
+
+#########################################################
+# Recieves data on the provided socket
+# @param socket - the socket to send data on
+# @return - the data received, and empty str means eof
+#            was found
+#########################################################
+def recvData(sock, headSize):
+	#data buffer	
+	data = ""
+	# The temporary buffer to store the received
+	# data.
+	recvBuff = ""
+	
+	# The size of the incoming file
+	recvSize = 0	
+	
+	# The buffer containing the file size
+	recvSizeBuff = ""
+	
+	# Receive the first 10 bytes indicating the
+	# size of the file
+	recvSizeBuff = recvAll(sock, headSize)
+	if not recvSizeBuff:
+		return ""
+		
+	# Get the file size
+	recvSize = int(recvSizeBuff)
+	
+	# Get the file data
+	data = recvAll(sock, recvSize)
+	if not data:
+		return ""
+
+	return data

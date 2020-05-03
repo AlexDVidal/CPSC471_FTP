@@ -42,46 +42,20 @@ while True:
 	while True:
 		# The buffer to all data received from the
 		# the client.
-		command = ""
+		commandData = ftp_helper.recvData(clientSock, headerSize)
 		
-		# The temporary buffer to store the received
-		# data.
-		recvBuff = ""
-		
-		# The size of the incoming file
-		commandSize = 0	
-		
-		# The buffer containing the file size
-		commandSizeBuff = ""
-		
-		# Receive the first 10 bytes indicating the
-		# size of the file
-		commandSizeBuff = ftp_helper.recvAll(clientSock, 10)
-		if not commandSizeBuff:
-			print("Client disconnected.\n")
-			break
-			
-		# Get the command size
-		commandSize = int(commandSizeBuff)
-		
-		# Get the command data
-		commandData = ftp_helper.recvAll(clientSock, commandSize)
 		if not commandData:
-			print("Client disconnected.\n")
-			break		
-
+			print("Client disconnnected.\n")
+			
 		#debug
 		#print(commandData)
 		
-		commandData = commandData.split()
+		tokens = commandData.split(" ")
 		#Handle quit command
-		if(commandData[0] == "quit"):
+		if(tokens[0] == "quit"):
 			response = "quit ok"
-			response = ftp_helper.attachHeader(response, headerSize)
-			numSent = 0
-			while len(response) > numSent:
-				numSent += clientSock.send(response[numSent:].encode())
-			
+			ftp_helper.sendData(clientSock, response, headerSize)
+
 			# Close socket now that quit has been received
 			clientSock.close()
 			print("Quit SUCCESSFUL. Closed socket to client.\n");
@@ -90,11 +64,7 @@ while True:
 		#Handle malformed command		
 		else:
 			response = "error"
-			response = ftp_helper.attachHeader(response, headerSize)
-			numSent = 0
-			while len(response) > numSent:
-				numSent += clientSock.send(response[numSent:].encode())
-			
+			ftp_helper.sendData(clientSock, response, headerSize)
 			print("ERROR. Malformed command from client:");
 			print(commandData)
 
