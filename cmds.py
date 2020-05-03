@@ -7,6 +7,7 @@ import subprocess
 #decode() is necessary because check_output returns byte objects by default
 #since we know we'll get ascii in this project decod() suffices to change to str
 response = subprocess.check_output(['ls','-la']).decode()
+
 print(response)
 
 

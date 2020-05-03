@@ -4,11 +4,16 @@
 # sent using sendfile(). The server receives a file and
 # prints it's contents.
 # *****************************************************
-
+import sys
 import socket
 
+# Command line checks 
+if len(sys.argv) < 2:
+	print("USAGE python " + sys.argv[0] + " <FILE NAME>")
+	exit()
+
 # The port on which to listen
-listenPort = 1234
+listenPort = int(sys.argv[1])
 
 # Create a welcome socket. 
 welcomeSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -38,7 +43,7 @@ def recvAll(sock, numBytes):
 	while len(recvBuff) < numBytes:
 		
 		# Attempt to receive bytes
-		tmpBuff =  sock.recv(numBytes)
+		tmpBuff =  sock.recv(numBytes).decode()
 		
 		# The other side has closed the socket
 		if not tmpBuff:
@@ -52,43 +57,50 @@ def recvAll(sock, numBytes):
 # Accept connections forever
 while True:
 	
-	print "Waiting for connections..."
+	print("Waiting for connections...")
 		
 	# Accept connections
 	clientSock, addr = welcomeSock.accept()
 	
-	print "Accepted connection from client: ", addr
-	print "\n"
+	print("Accepted connection from client: ", addr)
+	print("\n")
 	
-	# The buffer to all data received from the
-	# the client.
-	fileData = ""
-	
-	# The temporary buffer to store the received
-	# data.
-	recvBuff = ""
-	
-	# The size of the incoming file
-	fileSize = 0	
-	
-	# The buffer containing the file size
-	fileSizeBuff = ""
-	
-	# Receive the first 10 bytes indicating the
-	# size of the file
-	fileSizeBuff = recvAll(clientSock, 10)
+	#maintain comms with this client until quit received
+	while True:
+		# The buffer to all data received from the
+		# the client.
+		command = ""
 		
-	# Get the file size
-	fileSize = int(fileSizeBuff)
-	
-	print "The file size is ", fileSize
-	
-	# Get the file data
-	fileData = recvAll(clientSock, fileSize)
-	
-	print "The file data is: "
-	print fileData
+		# The temporary buffer to store the received
+		# data.
+		recvBuff = ""
 		
-	# Close our side
-	clientSock.close()
+		# The size of the incoming file
+		commandSize = 0	
+		
+		# The buffer containing the file size
+		commandSizeBuff = ""
+		
+		# Receive the first 10 bytes indicating the
+		# size of the file
+		commandSizeBuff = recvAll(clientSock, 10)
+		if not commandSizeBuff:
+			break
+			
+		print("Size of buffer is ", commandSizeBuff)
+		# Get the file size
+		commandSize = int(commandSizeBuff)
+		
+		print("The command size is ", commandSize)
+		
+		# Get the file data
+		commandData = recvAll(clientSock, commandSize)
+		if not commandData:
+			break		
+
+		print("The command is: ")
+		print(commandData)
+			
+		# Close our side if quit is received
+		#clientSock.close()
 	
