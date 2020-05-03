@@ -74,6 +74,18 @@ while True:
 		#we have a command, time to parse it
 		print(commandData)
 		
+		#for testing, send the command as a response
+		response = commandData
+		response = ftp_helper.attachHeader(response, headerSize)
+		numSent = 0
+		while len(response) > numSent:
+			numSent += clientSock.send(response[numSent:].encode())
+			print("sent", numSent, "bytes")
+
+
+		print("Sent ", numSent, " bytes in total.")
+
+
 		commandData = commandData.split()
 		
 			
