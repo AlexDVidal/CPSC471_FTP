@@ -86,7 +86,8 @@ while True:
 		#confirmation received, connect data socket and get data
 		dataSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		dataSocket.connect((serverAddr, dataPort))
-		data = ftp_helper.recvData(dataSocket, headerSize)
+		data = ftp_helper.recvDataBinary(dataSocket, headerSize)
+		dataSocket.close()
 		try:
 			dataFile = open(tokens[1], "w")
 		except Exception as exc:
@@ -116,16 +117,12 @@ while True:
 		dataSocket.connect((serverAddr, dataPort))
 		data = ftp_helper.recvData(dataSocket, headerSize)
 		print(data)
+		dataSocket.close()
 
 	else:
 		print("Unknown command.")
 		continue
 
-
-		
-	
-# Close the socket and the file
-# fileObj.close()
 	
 
 

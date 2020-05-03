@@ -46,6 +46,7 @@ while True:
 	while True:
 		# The buffer to all data received from the
 		# the client.
+		commandData = ""
 		commandData = ftp_helper.recvData(clientSock, headerSize)
 		
 		if not commandData:
@@ -53,7 +54,7 @@ while True:
 			break
 			
 		#debug
-		#print(commandData)
+		print(commandData)
 		
 		tokens = commandData.split(" ")
 		#Handle quit command
