@@ -95,7 +95,15 @@ while True:
 		print("Quitting out.")	
 		comSock.close()
 		exit()
-
+	elif(tokens[0] == "set"):
+		# //////////////////////////////////////
+		# 2nd Socket
+		print("Set command. Sending message")
+		serverPort2 = 12000
+		dataSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		dataSocket.connect((serverAddr, serverPort2))
+		message2 = "Testing second socket"
+		ftp_helper.sendData(dataSocket,message2,headerSize)
 	else:
 		print("Unknown command.")
 		continue

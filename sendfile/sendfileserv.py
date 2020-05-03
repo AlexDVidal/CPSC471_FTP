@@ -61,6 +61,22 @@ while True:
 			print("Quit SUCCESSFUL. Closed socket to client.\n");
 			break
 
+
+		# ////////////////////////////
+		# Second socket
+		elif tokens[0] == "set":
+			dataSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+			dataSocket.bind(('', 12000))
+			dataSocket.listen(1)
+			print("Waiting for second socket connections...")
+			clientSock2, addr2 = socket2.accept()
+			print("Accepted second connection from client: ", addr2)
+			print("\n")
+			fileData = ftp_helper.recvData(clientSock2,headerSize)
+			if not fileData:
+				print("Client disconnected data socket.")
+			print(fileData)
+
 		#Handle malformed command		
 		else:
 			response = "error"
