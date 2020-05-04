@@ -8,6 +8,9 @@ Alex Vidal avidal@csu.fullerton.edu
 Programming language -
 Python3
 
+Repository -
+https://github.com/AlexDVidal/CPSC471_FTP
+
 How to run the program -
 Once extracted the project structure should look like this
 <pre>
