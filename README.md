@@ -10,15 +10,16 @@ Python3
 
 How to run the program -
 Once extracted the project structure should look like this
-
+<pre>
 CPSC471\_FTP\/  
 \|\_\_\_\_ftp\_helpers.py  
 \|\_\_\_\_server\/  
-\|<br />\|\_\_\_\_sendfileserv.py  
+\|    \|\_\_\_\_sendfileserv.py  
 \|....\|\_\_\_\_serverFile.txt  
 \|\_\_\_\_client\/  
 \|....\|\_\_\_\_sendfilerscli.py  
 \|....\|\_\_\_\_clientFile.txt  
+</pre>
  
 Run an instance of the server by calling
     python3 sendfileserv.py <port>
