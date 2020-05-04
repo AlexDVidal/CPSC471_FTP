@@ -62,16 +62,30 @@ while True:
 			continue
 		print("Set command. Sending message")
 		try:
-			f = open(tokens[1], "r")
+			f = open(tokens[1], "rb")
 		except Exception as exc:
 			print("File ", tokens[1], "not found")
 			continue
-		serverPort2 = 12000
+		
+		ftp_helper.sendData(comSock, commandData, headerSize)
+		response = ftp_helper.recvData(comSock, headerSize).split(" ")
+		if len(response) == 0:
+			print("Server disconnected unexpectedly.")
+			break
+		elif(response[0] != "set" or len(response) < 4):
+			print(" ".join(response))
+			continue
+		#expect a response of the form "set ok port <num>
+		dataPort = int(response[3])
+		
+		#confirmation received, connect data socket and get data
 		dataSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		dataSocket.connect((serverAddr, serverPort2))
+		dataSocket.connect((serverAddr, dataPort))
+
 		message2 = f.read()
 		f.close()
 		ftp_helper.sendData(dataSocket,message2,headerSize)
+		dataSocket.close()
 
 	elif(tokens[0] == "get"):
 		if len(tokens) != 2:

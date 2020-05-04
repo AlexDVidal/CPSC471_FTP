@@ -75,21 +75,25 @@ while True:
 			if (len(tokens) != 2):
 				print("set FAILURE. Malformed request.", tokens)
 				continue
-			dataSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-			dataSocket.bind(('', 12000))
-			dataSocket.listen(1)
+			listenSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+			listenSocket.bind(('', 0))
+			listenSocket.listen(1)
+			dataPort = listenSocket.getsockname()[1]
+			#tell the client what port to connect to
+			response = "set ok port " +str(dataPort)
+			ftp_helper.sendData(clientSock, response, headerSize)
 			print("Waiting for second socket connections...")
-			clientSock2, addr2 = dataSocket.accept()
+			clientSock2, addr2 = listenSocket.accept()
 			print("Accepted second connection from client: ", addr2)
 			print("\n")
 			fileData = ftp_helper.recvDataBinary(clientSock2,headerSize)
 			if not fileData:
 				print("Client disconnected data socket.")
-			f = open(tokens[1], "w")
+			f = open(tokens[1], "wb")
 			f.write(fileData)
 			f.close()
-			print(fileData)
 			print("Data written to file: ", tokens[1])
+			print("set SUCCESS.\n")
 			clientSock2.close()
 			dataSocket.close()
 		
