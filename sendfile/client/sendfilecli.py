@@ -90,7 +90,7 @@ while True:
 		f.close()
 		ftp_helper.sendData(dataSocket,message2,headerSize)
 		dataSocket.close()
-		print("set file", tokens[1], len(data), "bytes.\n")
+		print("set file", tokens[1], len(message2), "bytes.\n")
 
 	elif(tokens[0] == "get"):
 		# //////////////////////////////////////

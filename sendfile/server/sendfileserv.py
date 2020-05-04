@@ -98,7 +98,7 @@ while True:
 			print("Data written to file: ", tokens[1])
 			print("set SUCCESS.\n")
 			clientSock2.close()
-			dataSocket.close()
+			listenSocket.close()
 		
 		elif tokens[0] == "get":
 			# /////////////////////////////////
