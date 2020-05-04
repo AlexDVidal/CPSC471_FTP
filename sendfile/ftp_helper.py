@@ -13,26 +13,27 @@ import socket
 # @param numBytes - the number of bytes to receive
 # @return - the bytes received
 # *************************************************
-def recvAll(sock, numBytes):
-
-	# The buffer
-	recvBuff = ""
-	
-	# The temporary buffer
-	tmpBuff = ""
-	
+def recvAll(sock, numBytes, binary):
+	bytesRead = 0
+	if binary == True:
+		recvBuff = bytes()
+	else:
+		recvBuff = ""
 	# Keep receiving till all is received
-	while len(recvBuff) < numBytes:
+	while bytesRead < numBytes:
 
-		tmpBuff =  sock.recv(numBytes).decode()
-		
+		if binary == True:
+			tmpBuff = sock.recv(numBytes)
+		else:
+			tmpBuff = sock.recv(numBytes).decode()		
+
 		# The other side has closed the socket
 		if not tmpBuff:
 			break
 		
 		# Add the received bytes to the buffer
 		recvBuff += tmpBuff
-	
+		bytesRead += len(tmpBuff)
 	return recvBuff
 
 ########################################################
@@ -44,6 +45,8 @@ def recvAll(sock, numBytes):
 # @return headBuff - the buffer with header affixed
 ########################################################
 def attachHeader(buff, headSize):
+	if type(buff) == str:
+		buff = bytes(buff.encode())
 	# Get the size of the data read
 	# and convert it to string
 	dataSizeStr = str(len(buff))
@@ -59,7 +62,7 @@ def attachHeader(buff, headSize):
 
 	# Prepend the size of the data to the
 	# file data.
-	headBuff = dataSizeStr + buff	
+	headBuff = bytes(dataSizeStr.encode()) + buff	
 	return headBuff
 
 #########################################################
@@ -77,7 +80,7 @@ def sendData(sock, data, headSize):
 
 	# Send the data!
 	while len(data) > numSent:
-		numSent += sock.send(data[numSent:].encode())
+		numSent += sock.send(data[numSent:])
 
 
 #########################################################
@@ -86,22 +89,10 @@ def sendData(sock, data, headSize):
 # @return - the data received, and empty str means eof
 #            was found
 #########################################################
-def recvData(sock, headSize):
-	#data buffer	
-	data = ""
-	# The temporary buffer to store the received
-	# data.
-	recvBuff = ""
-	
-	# The size of the incoming file
-	recvSize = 0	
-	
-	# The buffer containing the file size
-	recvSizeBuff = ""
-	
-	# Receive the first 10 bytes indicating the
+def recvDisambig(sock, headSize, binary):
+	# Receive the first headSize bytes indicating the
 	# size of the file
-	recvSizeBuff = recvAll(sock, headSize)
+	recvSizeBuff = recvAll(sock, headSize, False)
 	if not recvSizeBuff:
 		return ""
 		
@@ -109,15 +100,15 @@ def recvData(sock, headSize):
 	recvSize = int(recvSizeBuff)
 	
 	# Get the file data
-	data = recvAll(sock, recvSize)
+	data = recvAll(sock, recvSize, binary)
 	if not data:
 		return ""
 
 	return data
 
-#def recvData(sock, headSize):
-#	return recvDisambig(sock, headSize, binary=False)
+def recvData(sock, headSize):
+	return recvDisambig(sock, headSize, binary=False)
 
-#def recvDataBinary(sock, headSize):
-#	return recvDisambig(sock, headSize, binary=True)
+def recvDataBinary(sock, headSize):
+	return recvDisambig(sock, headSize, binary=True)
 

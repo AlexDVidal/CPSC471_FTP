@@ -93,10 +93,10 @@ while True:
 		#confirmation received, connect data socket and get data
 		dataSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		dataSocket.connect((serverAddr, dataPort))
-		data = ftp_helper.recvData(dataSocket, headerSize)
+		data = ftp_helper.recvDataBinary(dataSocket, headerSize)
 		dataSocket.close()
 		try:
-			dataFile = open(tokens[1], "w")
+			dataFile = open(tokens[1], "wb")
 		except Exception as exc:
 			print("ERROR writing file.", exc)
 			continue

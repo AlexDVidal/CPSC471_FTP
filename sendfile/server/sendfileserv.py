@@ -82,7 +82,7 @@ while True:
 			clientSock2, addr2 = dataSocket.accept()
 			print("Accepted second connection from client: ", addr2)
 			print("\n")
-			fileData = ftp_helper.recvData(clientSock2,headerSize)
+			fileData = ftp_helper.recvDataBinary(clientSock2,headerSize)
 			if not fileData:
 				print("Client disconnected data socket.")
 			f = open(tokens[1], "w")
@@ -101,10 +101,10 @@ while True:
 				ftp_helper.sendData(clientSock, "error malformed request", headerSize)
 				continue
 			try:
-				dataFile = open(tokens[1], "r")
+				dataFile = open(tokens[1], "rb")
 				data = dataFile.read(65536)
 			except Exception as exc:
-				print("get FAILURE.", exc)
+				print("get FAILURE.", exc, "\n")
 				ftp_helper.sendData(
 					clientSock, "error in subprocess for get", headerSize)
 				continue
