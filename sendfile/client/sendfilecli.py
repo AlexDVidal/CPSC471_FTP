@@ -42,6 +42,9 @@ while True:
 
 	commandData = userInput	
 	if(tokens[0] == "quit"):
+		# /////////////////////////////////////
+		# QUIT COMMAND
+		# /////////////////////////////////////
 		ftp_helper.sendData(comSock, commandData, headerSize)
 
 		response = ftp_helper.recvData(comSock, headerSize)
@@ -55,25 +58,26 @@ while True:
 
 	elif(tokens[0] == "set"):
 		# //////////////////////////////////////
-		# 2nd Socket
+		# SET COMMAND
+		# //////////////////////////////////////
 
 		if (len(tokens) != 2):
-			print("set FAILURE. Malformed request.", tokens)
+			print("Malformed command. Usage: set <filename>\n")
 			continue
 		print("Set command. Sending message")
 		try:
 			f = open(tokens[1], "rb")
 		except Exception as exc:
-			print("File ", tokens[1], "not found")
+			print("File ", tokens[1], "not found\n")
 			continue
 		
 		ftp_helper.sendData(comSock, commandData, headerSize)
 		response = ftp_helper.recvData(comSock, headerSize).split(" ")
 		if len(response) == 0:
-			print("Server disconnected unexpectedly.")
+			print("Server disconnected unexpectedly.\n")
 			break
 		elif(response[0] != "set" or len(response) < 4):
-			print(" ".join(response))
+			print(" ".join(response), "\n")
 			continue
 		#expect a response of the form "set ok port <num>
 		dataPort = int(response[3])
@@ -86,20 +90,24 @@ while True:
 		f.close()
 		ftp_helper.sendData(dataSocket,message2,headerSize)
 		dataSocket.close()
+		print("set file", tokens[1], len(data), "bytes.\n")
 
 	elif(tokens[0] == "get"):
+		# //////////////////////////////////////
+		# GET COMMAND
+		# //////////////////////////////////////
 		if len(tokens) != 2:
-			print("Malformed command. Usage: get <filename>")
+			print("Malformed command. Usage: get <filename>\n")
 			continue
 		commandData = userInput
 
 		ftp_helper.sendData(comSock, commandData, headerSize)
 		response = ftp_helper.recvData(comSock, headerSize).split(" ")
 		if len(response) == 0:
-			print("Server disconnected unexpectedly.")
+			print("Server disconnected unexpectedly.\n")
 			break
 		elif(response[0] != "get" or len(response) < 4):
-			print(" ".join(response))
+			print(" ".join(response), "\n")
 			continue
 		#expect a response of the form "get ok port <num>
 		dataPort = int(response[3])
@@ -112,7 +120,7 @@ while True:
 		try:
 			dataFile = open(tokens[1], "wb")
 		except Exception as exc:
-			print("ERROR writing file.", exc)
+			print("ERROR writing file.", exc, "\n")
 			continue
 		else:
 			dataFile.write(data)
@@ -120,15 +128,18 @@ while True:
 			print("got file", tokens[1], len(data), "bytes.\n")
 
 	elif(tokens[0] == "ls"):
+		# ////////////////////////////////////////
+		# LS COMMAND
+		# ////////////////////////////////////////
 		commandData = userInput
 
 		ftp_helper.sendData(comSock, commandData, headerSize)
 		response = ftp_helper.recvData(comSock, headerSize).split(" ")
 		if len(response) == 0:
-			print("Server disconnected unexpectedly.")
+			print("Server disconnected unexpectedly.\n")
 			break
 		elif(response[0] != "ls" or len(response) < 4):
-			print(" ".join(response))
+			print(" ".join(response), "\n")
 			continue
 		#expect a response of the form "ls ok port <num>
 		dataPort = int(response[3])
@@ -141,7 +152,7 @@ while True:
 		dataSocket.close()
 
 	else:
-		print("Unknown command.")
+		print("Unknown command.\n")
 		continue
 
 	

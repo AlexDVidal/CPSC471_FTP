@@ -60,18 +60,21 @@ while True:
 		tokens = commandData.split(" ")
 		#Handle quit command
 		if(tokens[0] == "quit"):
+			# /////////////////////////////////
+			# QUIT COMMAND
+			# /////////////////////////////////
 			response = "quit ok"
 			ftp_helper.sendData(clientSock, response, headerSize)
 
 			# Close socket now that quit has been received
 			clientSock.close()
-			print("Quit SUCCESSFUL. Closed socket to client.\n")
+			print("quit SUCCESSFUL. Closed socket to client.\n")
 			break
 
-
-		# ////////////////////////////
-		# Second socket
 		elif tokens[0] == "set":
+			# /////////////////////////////////
+			# SET COMMAND
+			# /////////////////////////////////
 			if (len(tokens) != 2):
 				print("set FAILURE. Malformed request.", tokens)
 				continue
@@ -88,7 +91,7 @@ while True:
 			print("\n")
 			fileData = ftp_helper.recvDataBinary(clientSock2,headerSize)
 			if not fileData:
-				print("Client disconnected data socket.")
+				print("Client disconnected data socket.\n")
 			f = open(tokens[1], "wb")
 			f.write(fileData)
 			f.close()
@@ -98,6 +101,9 @@ while True:
 			dataSocket.close()
 		
 		elif tokens[0] == "get":
+			# /////////////////////////////////
+			# GET COMMAND
+			# /////////////////////////////////
 			print("get received")
 			
 			if(len(tokens) != 2):
@@ -133,13 +139,16 @@ while True:
 			print("get SUCCESS\n")
 
 		elif tokens[0] == "ls":
+			# /////////////////////////////////
+			# LS COMMAND
+			# /////////////////////////////////
 			print("ls received")
 			
 			try:
 				data = subprocess.check_output(
 					tokens, stderr=subprocess.STDOUT).decode()
 			except Exception as exc:
-				print("ls FAILURE.", exc)
+				print("ls FAILURE.", exc, "\n")
 				ftp_helper.sendData(
 					clientSock, "error in subprocess for ls", headerSize)
 				continue
