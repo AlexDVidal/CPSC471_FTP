@@ -11,7 +11,7 @@ Python3
 How to run the program -
 Once extracted the project structure should look like this
 
-CPSC471_FTP\/  
+CPSC471\_FTP\/  
 \|\_\_\_\_ftp\_helpers.py  
 \|\_\_\_\_server\/  
 \|\ \ \ \|\_\_\_\_sendfileserv.py  
