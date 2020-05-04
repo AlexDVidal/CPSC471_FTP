@@ -15,15 +15,25 @@ How to run the program -
 Once extracted the project structure should look like this
 <pre>
 CPSC471_FTP/
+|____README.md
+|____FTP Report.pdf
+|____FTP Message Format.pdf
 |____ftp_helpers.py
 |____server/
 |  |____pythonserv.py
 |  |____serverFile.txt
+|  |____serverBinary
 |____client/
 |  |____pythoncli.py
 |  |____clientFile.txt
+|  |____clientBinary
 </pre>
- 
+
+clientBinary and serverBinary are to demonstrate that binary
+files can be transferred with get and set, they should not
+be executed (they're OpenMPI programs and likely won't run
+without mpirun anyways).
+
 Run an instance of the server by calling
     python3 pythonserv.py <port>
 where <port> is any number from 1024 to 49151
