@@ -15,7 +15,7 @@ import ftp_helper
 
 # Command line checks 
 if len(sys.argv) < 2:
-	print("USAGE python " + sys.argv[0] + " <FILE NAME>")
+	print("USAGE python " + sys.argv[0] + " <port>")
 	exit()
 
 headerSize = 10

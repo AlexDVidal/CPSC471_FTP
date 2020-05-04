@@ -16,17 +16,17 @@ import ftp_helper
 
 
 # Command line checks 
-if len(sys.argv) < 2:
-	print("USAGE python " + sys.argv[0] + " <FILE NAME>")
+if len(sys.argv) < 3:
+	print("USAGE python3 " + sys.argv[0] + " <server> <port")
 	exit()
     
 headerSize = 10
     
 # Server address
-serverAddr = "localhost"
+serverAddr = sys.argv[1]
 
 # Server port
-serverPort = int(sys.argv[1])
+serverPort = int(sys.argv[2])
 
 # Create a TCP socket
 comSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
