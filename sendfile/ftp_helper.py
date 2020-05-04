@@ -13,7 +13,7 @@ import socket
 # @param numBytes - the number of bytes to receive
 # @return - the bytes received
 # *************************************************
-def recvAll(sock, numBytes, binary):
+def recvAll(sock, numBytes):
 
 	# The buffer
 	recvBuff = ""
@@ -23,12 +23,8 @@ def recvAll(sock, numBytes, binary):
 	
 	# Keep receiving till all is received
 	while len(recvBuff) < numBytes:
-		
-		# Attempt to receive bytes
-		if binary == True:
-			tmpBuff =  sock.recv(numBytes)
-		else :
-			tmpBuff =  sock.recv(numBytes).decode()
+
+		tmpBuff =  sock.recv(numBytes).decode()
 		
 		# The other side has closed the socket
 		if not tmpBuff:
@@ -90,7 +86,7 @@ def sendData(sock, data, headSize):
 # @return - the data received, and empty str means eof
 #            was found
 #########################################################
-def recvDisambig(sock, headSize, binary):
+def recvData(sock, headSize):
 	#data buffer	
 	data = ""
 	# The temporary buffer to store the received
@@ -105,7 +101,7 @@ def recvDisambig(sock, headSize, binary):
 	
 	# Receive the first 10 bytes indicating the
 	# size of the file
-	recvSizeBuff = recvAll(sock, headSize, False)
+	recvSizeBuff = recvAll(sock, headSize)
 	if not recvSizeBuff:
 		return ""
 		
@@ -113,15 +109,15 @@ def recvDisambig(sock, headSize, binary):
 	recvSize = int(recvSizeBuff)
 	
 	# Get the file data
-	data = recvAll(sock, recvSize, binary)
+	data = recvAll(sock, recvSize)
 	if not data:
 		return ""
 
 	return data
 
-def recvData(sock, headSize):
-	return recvDisambig(sock, headSize, binary=False)
+#def recvData(sock, headSize):
+#	return recvDisambig(sock, headSize, binary=False)
 
-def recvDataBinary(sock, headSize):
-	return recvDisambig(sock, headSize, binary=True)
+#def recvDataBinary(sock, headSize):
+#	return recvDisambig(sock, headSize, binary=True)
 

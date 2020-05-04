@@ -41,9 +41,8 @@ while True:
 	numSent = 0
 
 	commandData = userInput	
-	ftp_helper.sendData(comSock, commandData, headerSize)
 	if(tokens[0] == "quit"):
-		
+		ftp_helper.sendData(comSock, commandData, headerSize)
 
 		response = ftp_helper.recvData(comSock, headerSize)
 
@@ -94,7 +93,7 @@ while True:
 		#confirmation received, connect data socket and get data
 		dataSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		dataSocket.connect((serverAddr, dataPort))
-		data = ftp_helper.recvDataBinary(dataSocket, headerSize)
+		data = ftp_helper.recvData(dataSocket, headerSize)
 		dataSocket.close()
 		try:
 			dataFile = open(tokens[1], "w")

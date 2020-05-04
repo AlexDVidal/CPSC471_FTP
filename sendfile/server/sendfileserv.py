@@ -47,6 +47,7 @@ while True:
 		# The buffer to all data received from the
 		# the client.
 		commandData = ""
+		tokens = []
 		commandData = ftp_helper.recvData(clientSock, headerSize)
 		
 		if not commandData:
@@ -54,7 +55,7 @@ while True:
 			break
 			
 		#debug
-		print(commandData)
+		#print(commandData)
 		
 		tokens = commandData.split(" ")
 		#Handle quit command
@@ -138,7 +139,7 @@ while True:
 				ftp_helper.sendData(
 					clientSock, "error in subprocess for ls", headerSize)
 				continue
-
+		
 			#we have the result of the call to ls, make an ephemeral port
 			#tell the client the details and send the data
 			listenSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
