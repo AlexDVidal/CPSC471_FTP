@@ -17,25 +17,29 @@ Once extracted the project structure should look like this
 CPSC471_FTP/
 |____ftp_helpers.py
 |____server/
-|  |____sendfileserv.py
+|  |____pythonserv.py
 |  |____serverFile.txt
 |____client/
-|  |____sendfilerscli.py
+|  |____pythoncli.py
 |  |____clientFile.txt
 </pre>
  
 Run an instance of the server by calling
-    python3 sendfileserv.py <port>
+    python3 pythonserv.py <port>
 where <port> is any number from 1024 to 49151
 
 Run an instance of the client by calling
-    python3 sendfilescli.py <port>
-where <port> is the same number as used in the server.
-By default the client uses localhost as the ip address for the server,
-so this project is designed to be run on one device.
-
+    python3 pythoncli.py <server> <port>
+where <server> is the name of the server to connect to, and 
+<port> is the same number as used in the server.
+If running the server and the client on the same machine
+you can use "localhost" for the server name.
+ 
 On the client side the commands you can enter are
    ls <options>
    set <filename>
    get <filename>
    quit
+
+ls hanldes most options available in the shell, but can't handle regexp.
+set and get can both transmit text files and binary files.
