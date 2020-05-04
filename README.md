@@ -14,11 +14,11 @@ Once extracted the project structure should look like this
 CPSC471_FTP/  
 |____ftp_helpers.py  
 |____server/  
-|  |____sendfileserv.py  
-|  |____serverFile.txt  
+|    |____sendfileserv.py  
+|    |____serverFile.txt  
 |____client/  
-|  |____sendfilerscli.py  
-|  |____clientFile.txt  
+|    |____sendfilerscli.py  
+|    |____clientFile.txt  
  
 Run an instance of the server by calling
     python3 sendfileserv.py <port>
