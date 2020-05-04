@@ -14,7 +14,7 @@ Once extracted the project structure should look like this
 CPSC471_FTP/  
 |____ftp_helpers.py  
 |____server/  
-\|  \|____sendfileserv.py  
+\|\  \|____sendfileserv.py  
 |  |____serverFile.txt  
 |____client/  
 |  |____sendfilerscli.py  
